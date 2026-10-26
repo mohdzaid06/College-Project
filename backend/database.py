@@ -4,8 +4,17 @@ import os
 import sqlite3
 from datetime import datetime, timezone
 
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE_PATH = os.environ.get("DATABASE_PATH", os.path.join(BASE_DIR, "placement.db"))
+
+if os.environ.get("VERCEL"):
+    DATABASE_PATH = "/tmp/placement.db"
+else:
+    DATABASE_PATH = os.environ.get(
+        "DATABASE_PATH",
+        os.path.join(BASE_DIR, "placement.db")
+    )
+
 
 
 
