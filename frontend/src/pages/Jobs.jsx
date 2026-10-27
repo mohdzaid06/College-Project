@@ -1,16 +1,153 @@
-import { useEffect, useState } from 'react'
-import { ArrowLeft, ArrowUpRight, BriefcaseBusiness, MapPin, Search } from 'lucide-react'
-import { Link, useParams } from 'react-router-dom'
-import { api, query } from '../services/api'
-import Notice from '../components/Notice'
 
-function JobCard({ job }) { return <Link to={`/jobs/${job.id}`} className="job-card"><div className="company-mark">{job.company.charAt(0)}</div><div className="job-card-main"><div className="job-meta"><span className="job-type">{job.job_type}</span>{job.is_sample && <span className="sample-tag">SAMPLE DATA</span>}</div><h3>{job.title}</h3><p className="company-name">{job.company}</p><div className="job-location"><MapPin size={14} /> {job.location}</div><div className="skill-list">{job.skills.slice(0, 3).map(skill => <span key={skill}>{skill}</span>)}</div></div><span className="job-open"><ArrowUpRight size={17} /></span></Link> }
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import {
+  ArrowLeft,
+  ArrowRight,
+  BriefcaseBusiness,
+  MapPin,
+  Search,
+} from 'lucide-react'
+import Notice from '../components/Notice'
+import {
+  getDemoJobs,
+  getDemoJob,
+  trackDemoJob,
+} from '../services/DemoStore.js'
+
+function JobCard({ job, onTrack, user }) {
+  return (
+    <article className="job-card">
+      <div className="company-row">
+        <div>
+          <h3>{job.title}</h3>
+          <p>{job.company}</p>
+        </div>
+        <span className="job-type">{job.job_type}</span>
+      </div>
+
+      <p>{job.description}</p>
+
+      <div className="job-meta">
+        <span><MapPin size={16} /> {job.location}</span>
+        <span><BriefcaseBusiness size={16} /> {job.job_type}</span>
+      </div>
+
+      <div className="job-skills">
+        {job.skills?.map((skill) => (
+          <span key={skill}>{skill}</span>
+        ))}
+      </div>
+
+      <div className="job-actions">
+        <Link className="button button-secondary" to={`/jobs/${job.id}`}>
+          View details <ArrowRight size={16} />
+        </Link>
+        {user && (
+          <button
+            className="button"
+            onClick={() => onTrack(job)}
+          >
+            Save job
+          </button>
+        )}
+      </div>
+    </article>
+  )
+}
 
 export default function Jobs({ user }) {
   const { id } = useParams()
-  const [jobs, setJobs] = useState([]), [job, setJob] = useState(null), [search, setSearch] = useState(''), [type, setType] = useState(''), [location, setLocation] = useState(''), [error, setError] = useState(''), [trackMessage, setTrackMessage] = useState(''), [loading, setLoading] = useState(true)
-  useEffect(() => { let alive = true; setLoading(true); api(id ? `/jobs/${id}` : `/jobs${query({ search, type, location })}`).then(data => { if (!alive) return; id ? setJob(data) : setJobs(data); setError('') }).catch(e => { if (alive) setError(e.message) }).finally(() => { if (alive) setLoading(false) }); return () => { alive = false } }, [id, search, type, location])
-  async function trackJob() { setTrackMessage(''); setError(''); try { await api('/applications', { method: 'POST', body: JSON.stringify({ job_id: job.id }) }); setTrackMessage('Added to your application tracker.') } catch (e) { setError(e.message) } }
-  if (id) return <div className="wrap page-wrap"><Link className="back-link" to="/jobs"><ArrowLeft size={16} /> Back to opportunities</Link><Notice error={error} success={trackMessage} />{loading ? <div className="loading">Loading listing…</div> : job && <article className="detail-card"><div className="company-mark large">{job.company.charAt(0)}</div><div className="job-meta"><span className="job-type">{job.job_type}</span>{job.is_sample && <span className="sample-tag">FICTIONAL SAMPLE</span>}</div><h1>{job.title}</h1><p className="detail-company">{job.company} <span>·</span> {job.location}</p><div className="sample-notice">This is fictional sample data for demonstrating the application. It is not a current vacancy.</div><h3>About this role</h3><p className="body-copy">{job.description}</p><h3>Skills to explore</h3><div className="skill-list">{job.skills.map(skill => <span key={skill}>{skill}</span>)}</div><h3>Application information</h3><p className="body-copy">{job.instructions}</p>{user ? <button className="button" onClick={trackJob}>Track this opportunity <ArrowUpRight size={17} /></button> : <Link className="button" to="/login">Log in to track this opportunity <ArrowUpRight size={17} /></Link>}</article>}</div>
-  return <div className="wrap page-wrap"><div className="page-intro"><div className="eyebrow"><span className="eyebrow-line" /> OPPORTUNITIES TO EXPLORE</div><h1>Find a role that<br /><em>fits your next step.</em></h1><p>Explore fictional sample listings, practise reading role requirements, and save opportunities to your tracker.</p></div><div className="filter-bar"><label className="search-field"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search title or company" aria-label="Search title or company" /></label><select value={type} onChange={e => setType(e.target.value)} aria-label="Filter by job type"><option value="">All types</option><option>Internship</option><option>Full-time</option><option>Part-time</option></select><label className="location-filter"><MapPin size={16} /><input value={location} onChange={e => setLocation(e.target.value)} placeholder="Location" aria-label="Filter by location" /></label></div><div className="listing-heading"><span>{loading ? 'Loading…' : `${jobs.length} ${jobs.length === 1 ? 'listing' : 'listings'}`}</span><span><BriefcaseBusiness size={15} /> Sample roles for practice</span></div><Notice error={error} />{loading ? <div className="loading">Finding opportunities…</div> : jobs.length ? <div className="jobs-grid">{jobs.map(job => <JobCard key={job.id} job={job} />)}</div> : <div className="empty-state"><span className="empty-icon"><Search /></span><h3>No matching roles yet</h3><p>Try a different search or clear your filters.</p></div>}</div>
+  const [jobs, setJobs] = useState([])
+  const [search, setSearch] = useState('')
+  const [type, setType] = useState('')
+  const [location, setLocation] = useState('')
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (id) {
+      const job = getDemoJob(id)
+      setJobs(job ? [job] : [])
+    } else {
+      setJobs(getDemoJobs({ search, type, location }))
+    }
+  }, [id, search, type, location])
+
+  function handleTrack(job) {
+    try {
+      trackDemoJob(job.id)
+      setError('')
+      setMessage('Job saved to your demo dashboard.')
+    } catch (err) {
+      setMessage('')
+      setError(err.message || 'Could not save this job.')
+    }
+  }
+
+  return (
+    <div className="wrap page-wrap">
+      <div className="page-intro">
+        <div className="eyebrow">PLACEMENT OPPORTUNITIES</div>
+        <h1>{id ? 'Job details' : 'Explore jobs'}</h1>
+        <p>Explore sample opportunities and save jobs to your demo dashboard.</p>
+      </div>
+
+      {message && <Notice message={message} />}
+      {error && <p role="alert">{error}</p>}
+
+      {!id && (
+        <div className="job-filters">
+          <label>
+            <Search size={16} />
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search jobs or companies"
+            />
+          </label>
+
+          <select value={type} onChange={(event) => setType(event.target.value)}>
+            <option value="">All job types</option>
+            <option value="Internship">Internship</option>
+            <option value="Full-time">Full-time</option>
+          </select>
+
+          <input
+            value={location}
+            onChange={(event) => setLocation(event.target.value)}
+            placeholder="Filter by location"
+          />
+        </div>
+      )}
+
+      {id && (
+        <Link to="/jobs" className="back-link">
+          <ArrowLeft size={16} /> Back to all jobs
+        </Link>
+      )}
+
+      {jobs.length === 0 ? (
+        <div className="empty-state">
+          <h2>No jobs found</h2>
+          <p>Try changing your search or filters.</p>
+        </div>
+      ) : (
+        <div className="jobs-grid">
+          {jobs.map((job) => (
+            <JobCard
+              key={job.id}
+              job={job}
+              user={user}
+              onTrack={handleTrack}
+            />
+          ))}
+        </div>
+      )}
+
+      <p className="demo-note">
+        These are fictional sample listings for college demonstration purposes.
+      </p>
+    </div>
+  )
 }

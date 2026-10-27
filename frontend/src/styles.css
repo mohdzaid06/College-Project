@@ -6,3 +6,125 @@
 @media(max-width:650px){.wrap{width:calc(100% - 36px)}.topbar{height:66px}.topbar-inner{width:calc(100% - 36px)}.mobile-toggle{display:block;color:#385b49;padding:7px}.nav-links{display:none;position:absolute;top:65px;left:0;right:0;background:#fbfcf9;border-bottom:1px solid var(--line);padding:15px 20px 20px;align-items:stretch;gap:0;flex-direction:column;box-shadow:0 12px 25px #243b3010}.nav-links.open{display:flex}.nav-links>a:not(.button),.nav-logout,.nav-user{padding:12px 3px;border:0;border-bottom:1px solid #edf0ed}.nav-links .button{margin-top:13px}.nav-user{padding-left:3px}.hero{display:block;padding-top:45px;padding-bottom:25px;min-height:unset}.hero-copy{padding:0}.hero h1{font-size:48px;letter-spacing:-2px;margin-top:22px}.hero-text{font-size:13px}.hero-actions{gap:17px;flex-wrap:wrap}.hero-actions .button{padding:12px 14px}.hero-note{margin-top:28px}.hero-visual{height:375px;transform:scale(.86);margin:-2px -20px 0}.orbit-one{width:360px;height:360px}.orbit-two{width:295px;height:295px}.tag-quiz{right:0}.tag-roles{left:0;bottom:28px}.hero-index{bottom:11px}.trust-inner{height:auto;min-height:72px;display:block;padding-top:17px;padding-bottom:14px}.trust-inner>span{font-size:8px}.trust-inner div{margin-top:9px}.section{padding-top:66px;padding-bottom:70px}.section-heading{display:block;margin-bottom:25px}.section-heading h2,.cta-panel h2{font-size:32px}.section-heading>p{margin-top:15px}.steps-grid{grid-template-columns:1fr}.step-card{min-height:178px}.cta-wrap{padding-bottom:46px}.cta-panel{display:block;padding:31px 25px;min-height:230px}.cta-panel h2{font-size:29px}.cta-panel .button{margin-top:23px}.cta-spark{right:26px;top:25px}.footer{display:block;padding:21px 18px}.footer>span{display:block;margin:18px 0 0 41px}.page-wrap{padding-top:45px;padding-bottom:65px}.page-intro h1,.dashboard-welcome h1{font-size:39px}.filter-bar{flex-wrap:wrap}.search-field{flex-basis:100%;border-bottom:1px solid #edf0ed;padding-bottom:7px}.filter-bar select{flex:1}.location-filter{flex:1;border-left:0;max-width:none}.jobs-grid{grid-template-columns:1fr}.listing-heading{font-size:10px}.detail-card{padding:23px}.detail-card h1{font-size:26px}.auth-wrap{grid-template-columns:1fr}.auth-art{padding:39px 28px 31px;min-height:235px}.auth-art h2{font-size:32px;margin:20px 0 9px}.auth-art>p{font-size:11px;margin:0}.auth-art-card{margin-top:23px}.auth-big-number{font-size:56px;right:20px;bottom:12px}.auth-form-panel{padding:39px 24px}.dashboard-welcome{display:block}.dashboard-welcome .button{margin-top:18px}.stats-grid{grid-template-columns:1fr 1fr}.stat-card{min-height:125px}.stat-card:last-child{grid-column:span 2}.dashboard-panel{padding:16px 14px 5px}.panel-heading h2{font-size:14px}.application-row{gap:7px}.application-row select{max-width:88px;font-size:8px}.application-info>b{font-size:10px}.empty-inline{flex-wrap:wrap}.empty-inline>div{min-width:calc(100% - 44px)}.empty-inline>a{margin-left:33px}.quiz-toolbar{display:block}.category-tabs{margin-bottom:10px}.question-card,.quiz-result{padding:22px 18px}.question-card h2{font-size:19px}.answer-option{font-size:11px}.admin-grid{grid-template-columns:1fr}.admin-form{padding:18px}.form-row{gap:8px}.admin-footnote{align-items:flex-start;line-height:1.55}}
 .admin-records{background:#fff;border:1px solid #e5eae5;border-radius:9px;margin-top:16px;padding:18px 20px}.admin-records .panel-heading>span{color:#839087;font-size:10px}.admin-record{display:flex;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid #f0f2ef}.admin-record:last-child{border-bottom:0}.admin-record>div{flex:1;min-width:0}.admin-record b,.admin-record small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.admin-record b{font-size:11px;color:#33473b}.admin-record small{font-size:9px;color:#8b9690;margin-top:4px}.admin-record button{border:1px solid #e7ebe7;background:#fff;color:#718278;border-radius:5px;width:30px;height:30px;display:grid;place-items:center;cursor:pointer}.admin-record button:hover{background:#f2f5f1;color:#3e6649}.form-actions{display:flex;align-items:center;gap:12px}.cancel-edit{border:0;background:none;color:#78867d;display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer}
 .guest-result{margin-top:18px;color:#88948c;font-size:10px}.guest-result a{color:#496f54;font-weight:700}
+
+/* PlaciFy demo jobs layout fix */
+.job-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+
+.job-filters label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.job-filters input,
+.job-filters select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #d8e0db;
+  border-radius: 10px;
+  font: inherit;
+  background: white;
+}
+
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+.job-card {
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #e0e7e2;
+  border-radius: 14px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.job-card h3,
+.job-card p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.company-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.job-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.job-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.job-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.job-skills span,
+.job-type {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef4ef;
+  color: #315e4f;
+  font-size: 13px;
+}
+
+.job-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.job-actions .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  min-height: 44px;
+  padding: 10px 16px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 760px) {
+  .jobs-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .job-card {
+    padding: 18px;
+  }
+}
